@@ -95,7 +95,7 @@ This creates a separate database with demo data plus exactly 100,000 East certif
 
 ## Evidence and limitations
 
-See [docs/verification.md](docs/verification.md), [docs/code-review.md](docs/code-review.md), and [ai/decision-log.md](ai/decision-log.md) for actual results and review dispositions. Native AI interaction snapshots and their index remain local pending candidate-answer privacy redaction and are not included in this push. Publication status and completeness limits are explicit in [ai/completeness.md](ai/completeness.md).
+See [docs/verification.md](docs/verification.md), [docs/code-review.md](docs/code-review.md), and [ai/decision-log.md](ai/decision-log.md) for actual results and review dispositions. Native AI interaction snapshots, index, and export manifest are included under ai/. They cover only the mianshi-Ocean workspace. Capture cutoffs, privacy redactions, and completeness limits are explicit in [ai/completeness.md](ai/completeness.md).
 
 This is a local assessment app, not a production authentication/deployment solution. Windows startup is not verified. The frontend build has a large-bundle warning and ignores upstream Ant Design `use client` directives in this client-only application. The pytest run reports an upstream Starlette/AnyIO deprecation warning. These warnings do not represent passing checks being skipped. See verification for any remaining unverified scenarios.
 

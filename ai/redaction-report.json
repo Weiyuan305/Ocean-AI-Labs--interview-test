@@ -1,0 +1,105 @@
+{
+  "reviewed_at": "2026-11-10T16:51:43.980807+00:00",
+  "workspace": "/Users/zhaojingwen/Desktop/AI/mianshi-Ocean",
+  "scope": "Five interactive assessment sessions; other workspaces and host-internal approval reviews excluded.",
+  "records": [
+    {
+      "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "record": 195,
+      "redactions": 11,
+      "reason": "unrelated workspace data",
+      "record_timestamp": "2026-11-10T15:55:28.404Z"
+    },
+    {
+      "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "record": 197,
+      "redactions": 11,
+      "reason": "unrelated workspace data",
+      "record_timestamp": "2026-11-10T15:55:28.785Z"
+    },
+    {
+      "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "record": 1138,
+      "redactions": 1,
+      "reason": "unrelated workspace data",
+      "record_timestamp": "2026-11-10T16:38:30.998Z"
+    },
+    {
+      "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "record": 1139,
+      "redactions": 1,
+      "reason": "unrelated workspace data",
+      "record_timestamp": "2026-11-10T16:38:31.002Z"
+    },
+    {
+      "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "record": 1269,
+      "redactions": 13,
+      "reason": "unrelated workspace data",
+      "record_timestamp": "2026-11-10T16:43:20.521Z"
+    },
+    {
+      "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "record": 1270,
+      "redactions": 13,
+      "reason": "unrelated workspace data",
+      "record_timestamp": "2026-11-10T16:43:20.523Z"
+    },
+    {
+      "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "record": 1276,
+      "redactions": 2,
+      "reason": "unrelated workspace data",
+      "record_timestamp": "2026-11-10T16:43:35.197Z"
+    },
+    {
+      "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "record": 1277,
+      "redactions": 2,
+      "reason": "unrelated workspace data",
+      "record_timestamp": "2026-11-10T16:43:35.200Z"
+    },
+    {
+      "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "record": 1282,
+      "redactions": 12,
+      "reason": "unrelated workspace data",
+      "record_timestamp": "2026-11-10T16:43:44.390Z"
+    },
+    {
+      "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "record": 1284,
+      "redactions": 12,
+      "reason": "unrelated workspace data",
+      "record_timestamp": "2026-11-10T16:43:45.469Z"
+    },
+    {
+      "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "record": 1290,
+      "redactions": 3,
+      "reason": "unrelated workspace data",
+      "record_timestamp": "2026-11-10T16:43:58.426Z"
+    },
+    {
+      "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "record": 1291,
+      "redactions": 3,
+      "reason": "unrelated workspace data",
+      "record_timestamp": "2026-11-10T16:43:58.428Z"
+    },
+    {
+      "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "record": 1327,
+      "redactions": 1,
+      "reason": "unrelated workspace prompt fragment in inventory command parameters",
+      "record_timestamp": "2026-11-10T16:46:01.174Z"
+    },
+    {
+      "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "record": 1329,
+      "redactions": 2,
+      "reason": "unrelated workspace prompt fragment in inventory command parameters",
+      "record_timestamp": "2026-11-10T16:46:01.834Z"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+[
+  {
+    "session_id": "01a1c623-2c2e-7b80-abe6-be94617590ba",
+    "native_metadata_session_ids": [
+      "01a1c623-2c2e-7b80-abe6-be94617590ba"
+    ],
+    "export_file": "ai/sessions/rollout-2026-11-10T23-45-56-01a1c623-2c2e-7b80-abe6-be94617590ba.jsonl",
+    "captured_at": "2026-11-10T16:47:39.193180+00:00",
+    "last_record_at": "2026-11-10T16:47:38.858Z",
+    "records": 1350,
+    "redactions": 87,
+    "sha256": "ddfc82bbea5a19219f6b0c0e54fff3f4b8df5a2d3a28a405e48f85c45352bc5e",
+    "partial_snapshot": true,
+    "unredacted_snapshot_sha256": "b4ea4d8e09c3eaa23fe2fe228d271f610946a74ba667bd08c1bccb2543b5c78a",
+    "privacy_redactions": 87
+  },
+  {
+    "session_id": "01a1c62b-c1f4-7970-a3ab-17ae4c6ae0f5",
+    "native_metadata_session_ids": [
+      "01a1c623-2c2e-7b80-abe6-be94617590ba",
+      "01a1c62b-c1f4-7970-a3ab-17ae4c6ae0f5"
+    ],
+    "export_file": "ai/sessions/rollout-2026-11-10T23-55-18-01a1c62b-c1f4-7970-a3ab-17ae4c6ae0f5.jsonl",
+    "captured_at": "2026-11-10T16:47:39.225888+00:00",
+    "last_record_at": "2026-11-10T15:58:00.962Z",
+    "records": 126,
+    "redactions": 0,
+    "sha256": "92ba55bd7e7829265603d5bb6d8612756640a9d04990440cc7eded105fa07277",
+    "partial_snapshot": false,
+    "unredacted_snapshot_sha256": "92ba55bd7e7829265603d5bb6d8612756640a9d04990440cc7eded105fa07277",
+    "privacy_redactions": 0
+  },
+  {
+    "session_id": "01a1c63b-51df-79c0-a350-0d05b7d6569c",
+    "native_metadata_session_ids": [
+      "01a1c63b-51df-79c0-a350-0d05b7d6569c"
+    ],
+    "export_file": "ai/sessions/rollout-2026-11-11T00-12-18-01a1c63b-51df-79c0-a350-0d05b7d6569c.jsonl",
+    "captured_at": "2026-11-10T16:47:39.247497+00:00",
+    "last_record_at": "2026-11-10T16:35:07.130Z",
+    "records": 119,
+    "redactions": 0,
+    "sha256": "fefd718dfe981859ff0a0f8159589b2a22a315d2d2f6092ea553f6ac0e1d33d4",
+    "partial_snapshot": false,
+    "unredacted_snapshot_sha256": "fefd718dfe981859ff0a0f8159589b2a22a315d2d2f6092ea553f6ac0e1d33d4",
+    "privacy_redactions": 0
+  },
+  {
+    "session_id": "01a1c63b-74ee-7b40-8661-7b62ac296117",
+    "native_metadata_session_ids": [
+      "01a1c63b-74ee-7b40-8661-7b62ac296117"
+    ],
+    "export_file": "ai/sessions/rollout-2026-11-11T00-12-27-01a1c63b-74ee-7b40-8661-7b62ac296117.jsonl",
+    "captured_at": "2026-11-10T16:47:39.265941+00:00",
+    "last_record_at": "2026-11-10T16:37:33.076Z",
+    "records": 69,
+    "redactions": 0,
+    "sha256": "221a6b849332730ee667aba6bb3cf08c03181b648fc5b5bbdb86fcbea85a4d04",
+    "partial_snapshot": false,
+    "unredacted_snapshot_sha256": "221a6b849332730ee667aba6bb3cf08c03181b648fc5b5bbdb86fcbea85a4d04",
+    "privacy_redactions": 0
+  },
+  {
+    "session_id": "01a1c649-8588-7db2-ba53-bb5ae141622a",
+    "native_metadata_session_ids": [
+      "01a1c649-8588-7db2-ba53-bb5ae141622a"
+    ],
+    "export_file": "ai/sessions/rollout-2026-11-11T00-27-49-01a1c649-8588-7db2-ba53-bb5ae141622a.jsonl",
+    "captured_at": "2026-11-10T16:47:39.282205+00:00",
+    "last_record_at": "2026-11-10T16:35:00.437Z",
+    "records": 85,
+    "redactions": 0,
+    "sha256": "71ae1c0fdd08e360ff048eb1bff2699fc291598d02f1091071faef8a2682c5df",
+    "partial_snapshot": false,
+    "unredacted_snapshot_sha256": "71ae1c0fdd08e360ff048eb1bff2699fc291598d02f1091071faef8a2682c5df",
+    "privacy_redactions": 0
+  }
+]

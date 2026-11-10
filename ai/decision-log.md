@@ -1,6 +1,6 @@
 # Decision Log
 
-Root session: 01a1c623-2c2e-7b80-abe6-be94617590ba. The native session index and snapshots remain local pending candidate-answer privacy redaction; see completeness.md for publication status.
+Root session: 01a1c623-2c2e-7b80-abe6-be94617590ba. The native session index and snapshots are published for this workspace only; see completeness.md for the cutoff and redaction scope.
 
 | Decision | Type and rationale | Evidence | Commit |
 | --- | --- | --- | --- |
@@ -19,3 +19,7 @@ No AI mistake or test result was invented. Browser locator failures and dependen
 - Restricted public actor discovery to the two declared demo identities and bounded integer inputs; added the common framework error envelope. Seven failing security/boundary cases became passing regressions.
 - Chose spreadsheet-safe CSV output for formula-like input text. This intentionally prefixes selected exported cells while preserving database values; spec section 6 records the contract change.
 - Honored the candidate's instruction to keep unfinished answers local. Pushed the clean business baseline first and kept answer-containing local history and raw AI snapshots out of publication. Full evidence publication remains an explicit unfinished delivery gate.
+
+## Evidence publication
+
+The candidate authorized evidence publication and clarified that only mianshi-Ocean belongs to this assessment. Five workspace sessions are included. Other-workspace snapshots were removed before staging; unrelated excerpts in tool output were narrowly redacted with their reason recorded. Evidence packaging continued after 00:45; native timestamps preserve that timing.

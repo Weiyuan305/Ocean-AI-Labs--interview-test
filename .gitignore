@@ -13,8 +13,3 @@ data/
 .env
 .DS_Store
 *.tsbuildinfo
-
-# Native snapshots remain local pending candidate-answer privacy review.
-ai/sessions/
-ai/export-manifest.json
-ai/session-index.csv

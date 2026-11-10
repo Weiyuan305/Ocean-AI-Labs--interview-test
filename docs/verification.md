@@ -48,5 +48,5 @@ Final screenshots were visually inspected at desktop 1440x1000 and mobile 390x84
 - Ant Design's upstream use-client directives are ignored in this client-only Vite build. The JavaScript bundle is approximately 961 kB before compression and triggers Vite's size warning. No SSR is used.
 - npm reported a Vite advisory for the initial selected version; Vite was updated to compatible patch 6.4.6 and npm reported zero vulnerabilities afterward.
 - Windows setup, sustained-load behavior, and file-descriptor leak soak tests are not verified.
-- Native AI exports remain local pending candidate-answer privacy redaction; they are deliberately excluded from this push.
+- Native AI snapshots are published only for the mianshi-Ocean workspace, through their recorded cutoffs. Other workspaces are excluded. The final upload confirmation necessarily occurs after the snapshot.
 - AI export completeness and candidate-written answers are separate submission gates; passing application tests does not certify them.
