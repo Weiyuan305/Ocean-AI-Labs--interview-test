@@ -1,0 +1,5 @@
+1. Directly changing an existing field to a new field will cause errors in old instances.Therefore, the correct approach is as follows: when releasing a new version, start using `users.full_name` for the relevant field. New data should be written to this new field, while the old field is also updated simultaneously to ensure consistency between the two. Once everything has stabilized, you can then proceed with the data migration.
+
+2. Even after Request B deletes the cache, Request A can still write the old value back; consequently, it is still possible to read an incorrect state within those 5 seconds. So I think the truth is the certificate status is read from the primary database each time, while the cache only stores other fields that do not affect revocation determinations.
+
+3. A rate of 1,000 requests per second is too high; the 50 workers in Service A cannot handle such a volume of traffic, and retries would only exacerbate the situation.However, I cannot come up with a good solution for this at the moment, as I haven’t encountered this type of issue before.

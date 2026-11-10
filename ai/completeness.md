@@ -4,7 +4,7 @@ This assessment used Codex for planning, GitHub/documentation research, architec
 
 ## Publication status
 
-Native snapshots, their index, and manifest are retained locally and excluded from this push. A prior tool output inadvertently included a candidate-answer line, so raw snapshots require narrow privacy redaction before publication. The candidate explicitly requested that unfinished written answers remain local. This repository therefore does not yet satisfy the complete AI-evidence submission gate. Do not publish the local private backup branch, which preserves earlier answer-containing history.
+Native snapshots, their index, and manifest are retained locally and excluded from this push. A prior tool output inadvertently included a candidate-answer line, so raw snapshots require narrow privacy redaction before publication. The candidate subsequently authorized publication of the completed written answers; that file is committed unchanged. Raw log publication remains pending a privacy review and complete reviewer-session inventory. This repository therefore does not yet satisfy the complete AI-evidence submission gate. Do not publish the local private backup branch, which preserves earlier answer-containing history.
 
 ## Evidence format and scope
 

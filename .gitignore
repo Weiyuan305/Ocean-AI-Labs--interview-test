@@ -13,9 +13,6 @@ data/
 .env
 .DS_Store
 *.tsbuildinfo
-# Candidate-owned work remains local until explicitly approved for submission.
-written-answer.md
-written-answers.md
 
 # Native snapshots remain local pending candidate-answer privacy review.
 ai/sessions/
