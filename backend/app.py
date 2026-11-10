@@ -104,4 +104,8 @@ def create_app(db_path=None):
         from starlette.concurrency import run_in_threadpool
         return await run_in_threadpool(service.revoke,path,current,certificate_id)
 
+    dist=Path(__file__).resolve().parent.parent/'frontend'/'dist'
+    if dist.exists():
+        from fastapi.staticfiles import StaticFiles
+        app.mount('/',StaticFiles(directory=dist,html=True),name='console')
     return app
