@@ -55,7 +55,7 @@ def create_app(db_path=None):
 
     @app.exception_handler(Exception)
     async def internal_error(request, exc):
-        return JSONResponse({'error':{'code':'INTERNAL_ERROR','message':'The operation could not be completed.'}},status_code=500)
+        return JSONResponse({'error':{'code':'INTERNAL_ERROR','message':'The operation could not be completed.'}},status_code=500,headers={'Cache-Control':'no-store'})
 
     def actor(request: Request):
         return service.actor_for(path,request.headers.get('Authorization'))

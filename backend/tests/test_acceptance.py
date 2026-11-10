@@ -76,6 +76,8 @@ def test_bulk_retry_conflict_and_eligibility(env):
     assert issue(client).json() == result
     assert issue(client,key='new').json()['summary']['issued'] == 0
     assert counts(path) == (5,6,2)
+    with TestClient(create_app(str(path))) as restarted:
+        assert restarted.get(f'/api/certificates/{cert_id}',headers=ALICE).json()['revoked_at']==first.json()['revoked_at']
     assert client.post(f'/api/certificates/{cert_id}/revoke',headers=BOB).status_code == 404
 
 
@@ -120,7 +122,9 @@ def test_audit_failure_rolls_back_operation(env):
     client,path,_=env
     with sqlite3.connect(path) as db:
         db.execute("CREATE TRIGGER fail_audit BEFORE INSERT ON audit_events BEGIN SELECT RAISE(ABORT,'test failure'); END")
-    assert issue(client).status_code==500
+    failed=issue(client)
+    assert failed.status_code==500
+    assert failed.headers.get('cache-control')=='no-store'
     assert counts(path)==(4,4,0)
     with sqlite3.connect(path) as db:
         db.execute('DROP TRIGGER fail_audit')

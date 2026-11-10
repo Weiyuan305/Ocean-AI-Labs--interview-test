@@ -76,6 +76,24 @@ def test_a6_real_http(tmp_path):
         with httpx.stream('GET',base+'/api/certificates/export.csv',headers=headers) as response:
             next(response.iter_bytes())
         assert httpx.get(base+'/api/certificates',headers=headers).status_code==200
+        # Verify A2 and A7 over actual sockets as well as in-process HTTP clients.
+        gate=threading.Barrier(4)
+        def issue_live(_):
+            gate.wait()
+            return httpx.post(base+'/api/certificate-issuances',json={'course_id':1},headers={**headers,'Idempotency-Key':'live-concurrent'},timeout=20)
+        with ThreadPoolExecutor(4) as pool:
+            issued=list(pool.map(issue_live,range(4)))
+        assert all(r.status_code==200 and r.json()==issued[0].json() for r in issued)
+        assert issued[0].json()['summary']=={'issued':1,'skipped':2,'failed':0}
+        certificate_id=issued[0].json()['outcomes'][0]['certificate_id']
+        def revoke_live(_):
+            gate.wait()
+            return httpx.post(base+f'/api/certificates/{certificate_id}/revoke',headers=headers,timeout=20)
+        with ThreadPoolExecutor(4) as pool:
+            revoked=list(pool.map(revoke_live,range(4)))
+        assert all(r.status_code==200 for r in revoked)
+        assert len({r.json()['revoked_at'] for r in revoked})==1
+        assert [e['event_type'] for e in revoked[0].json()['audit_events']]==['ISSUED','REVOKED']
         print('\nA6_MEASUREMENTS '+json.dumps({'rows':len(rows),'first_seconds':round(t1,3),'second_seconds':round(t2,3),'concurrent_list_seconds':round(list_elapsed,3),'python':platform.python_version(),'platform':platform.platform()}))
     finally:
         process.terminate()

@@ -1,0 +1,71 @@
+const { chromium } = require('../frontend/node_modules/playwright');
+const assert = require('node:assert/strict');
+const {spawn}=require('node:child_process');
+const fs=require('node:fs');
+const os=require('node:os');
+const path=require('node:path');
+(async()=>{
+ const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'certificate-ui-'));
+ const port=process.env.UI_TEST_PORT||'8011';
+ const base=process.env.APP_URL||`http://127.0.0.1:${port}`;
+ const server=process.env.APP_URL?null:spawn(path.resolve('.venv/bin/python'),['-m','uvicorn','backend.app:create_app','--factory','--host','127.0.0.1','--port',port,'--log-level','error'],{env:{...process.env,DB_PATH:path.join(tmp,'ui.sqlite3')},stdio:'ignore'});
+ for(let i=0;i<100;i++){try{if((await fetch(base+'/api/demo-actors')).ok)break}catch{}await new Promise(r=>setTimeout(r,50))}
+ let browser;
+ try {
+ browser=await chromium.launch({headless:true,...(process.env.BROWSER_EXECUTABLE?{executablePath:process.env.BROWSER_EXECUTABLE}:{})});
+ const page=await browser.newPage({viewport:{width:1440,height:1000}});
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(base);
+ await page.getByRole('heading',{name:'Certificates',exact:true}).waitFor();
+ await page.getByText('East tenant',{exact:true}).waitFor();
+ await page.getByText('Jordan Chen',{exact:true}).waitFor();
+ await page.locator('.ant-spin-spinning').waitFor({state:'hidden'});
+ await page.screenshot({path:'artifacts/console-desktop.png',fullPage:true,animations:'disabled'});
+ await page.getByRole('combobox',{name:'Course',exact:true}).click();
+ await page.getByText('Safety 101 · 2 completed / 1 incomplete',{exact:true}).click();
+ await page.getByRole('button',{name:'Issue certificates',exact:true}).click();
+ await page.getByText('Operation completed: 1 issued, 2 skipped, 0 failed.',{exact:true}).waitFor();
+ const alex=page.locator('.records tr').filter({hasText:'Alex Lee'});
+ await alex.getByRole('button',{name:/View/}).click();
+ await page.getByRole('button',{name:'Revoke certificate',exact:true}).click();
+ await page.locator('.ant-modal-confirm').getByRole('button',{name:'Revoke certificate',exact:true}).click();
+ await page.getByRole('button',{name:'Certificate revoked',exact:true}).waitFor();
+ await page.getByText('Revoked at (UTC)',{exact:true}).waitFor();
+ await page.locator('.ant-modal-confirm:visible').waitFor({state:'hidden'});
+ await page.screenshot({path:'artifacts/console-detail.png',fullPage:true,animations:'disabled'});
+ await page.getByRole('button',{name:'Close',exact:true}).click();
+ const downloadPromise=page.waitForEvent('download');
+ await page.getByRole('button',{name:'Export CSV',exact:true}).click();
+ const download=await downloadPromise;
+ assert.equal(download.suggestedFilename(),'east-certificates.csv');
+ let release, observed;
+ const held=new Promise(resolve=>{release=resolve});
+ const intercepted=new Promise(resolve=>{observed=resolve});
+ await page.route(/\/api\/certificates\?/,async route=>{
+   if((await route.request().allHeaders())['authorization']==='Bearer east-demo-token'){
+     const response=await route.fetch();observed();await held;await route.fulfill({response}).catch(()=>{});
+   }else await route.continue();
+ });
+ await page.getByRole('searchbox',{name:'Search certificates'}).fill('Alex');
+ await page.getByRole('searchbox',{name:'Search certificates'}).press('Enter');
+ await Promise.race([intercepted,new Promise((_,reject)=>setTimeout(()=>reject(new Error('East response was not intercepted')),5000))]);
+ await page.locator('.topbar .ant-select-selector').click();
+ await page.getByText('bob@west.test',{exact:true}).last().click();
+ await page.getByText('West tenant',{exact:true}).waitFor();
+ release();
+ await page.locator('.ant-spin-spinning').waitFor({state:'hidden'});
+ await page.getByText('Jordan Chen',{exact:true}).waitFor();
+ assert.equal(await page.locator('.records tr').filter({hasText:'Alex Lee'}).count(),0);
+ assert.equal(await page.locator('.operation-result').count(),0);
+ await page.getByRole('searchbox',{name:'Search certificates'}).fill('missing learner');
+ await page.getByRole('searchbox',{name:'Search certificates'}).press('Enter');
+ await page.getByText('No certificates match your search.',{exact:true}).waitFor();
+ await page.locator('.ant-select-dropdown:visible').waitFor({state:'hidden'});
+ await page.locator('.ant-spin-spinning').waitFor({state:'hidden'});
+ await page.setViewportSize({width:390,height:844});
+ await page.screenshot({path:'artifacts/console-mobile.png',fullPage:true,animations:'disabled'});
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false);
+ assert.deepEqual(errors,[]);
+ console.log('UI_SMOKE_PASS: issue, detail, confirmed revoke, CSV download, actor isolation, empty state, mobile width, no page errors');
+ } finally {await browser?.close();server?.kill();fs.rmSync(tmp,{recursive:true,force:true})}
+})().catch(e=>{console.error(e);process.exit(1)});
