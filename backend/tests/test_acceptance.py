@@ -20,6 +20,50 @@ def env(tmp_path):
         yield client, path, app
 
 
+def test_demo_discovery_does_not_publish_additional_credentials(env):
+    client, path, _ = env
+    with sqlite3.connect(path) as db:
+        db.execute('INSERT INTO actors VALUES(3,1,?,?)', ('private@east.test', 'private-test-token'))
+    response = client.get('/api/demo-actors')
+    assert response.status_code == 200
+    assert {item['id'] for item in response.json()['items']} == {1, 2}
+    assert 'private-test-token' not in response.text
+
+
+@pytest.mark.parametrize('target', ['page', 'detail', 'revoke', 'course'])
+def test_oversized_integer_is_validation_error(env, target):
+    client, _, _ = env
+    large = 2**63
+    if target == 'page':
+        response = client.get(f'/api/certificates?page={large}&page_size=100', headers=ALICE)
+    elif target == 'detail':
+        response = client.get(f'/api/certificates/{large}', headers=ALICE)
+    elif target == 'revoke':
+        response = client.post(f'/api/certificates/{large}/revoke', headers=ALICE)
+    else:
+        response = issue(client, course=large)
+    assert response.status_code == 422
+    assert response.json()['error']['code'] == 'INVALID_REQUEST'
+
+
+def test_unknown_route_uses_error_envelope(env):
+    client, _, _ = env
+    response = client.get('/api/unknown', headers=ALICE)
+    assert response.status_code == 404
+    assert response.json()['error']['code'] == 'NOT_FOUND'
+    assert response.headers['Cache-Control'] == 'no-store'
+
+
+def test_csv_neutralizes_spreadsheet_formulas(env):
+    client, path, _ = env
+    for name in ['=1+1', '+SUM(1,2)', '-1+2', '@SUM(1)', '  =1+1', '\tformula', '\rformula', '\n=1+1']:
+        with sqlite3.connect(path) as db:
+            db.execute('UPDATE learners SET name=?,search_name=? WHERE id=3', (name,name.casefold()))
+        response = client.get('/api/certificates/export.csv', headers=ALICE)
+        rows = list(csv.DictReader(io.StringIO(response.text)))
+        assert next(row for row in rows if row['serial_number']=='DEMO-0001')['learner_name'] == "'" + name
+
+
 def test_actor_isolation_and_detail_dates(env):
     client, _, _ = env
     assert client.get('/api/certificates').status_code == 401

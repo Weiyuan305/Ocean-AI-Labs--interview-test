@@ -4,7 +4,7 @@ Spec: [spec.md](spec.md). Approved for implementation by the candidate. All UI a
 
 ## Global constraints
 
-Implement A1-A7 with real SQLite persistence, actor-derived tenancy, transactional audit, idempotent issuance, local calendar dates, stable streamed CSV, and one-command startup. Freeze engineering at 00:30 Asia/Shanghai; deadline 00:45. Work on `implementation/certificate-console` in the existing clean project folder.
+Implement A1-A7 with real SQLite persistence, actor-derived tenancy, transactional audit, idempotent issuance, local calendar dates, stable streamed CSV, and one-command startup. Original target freeze: 00:30 Asia/Shanghai; the candidate then requested expanded testing and review. Hard deadline remains 00:45. Work on `implementation/certificate-console` in the existing clean project folder.
 
 ## Tasks
 
@@ -21,4 +21,13 @@ Each task records its actual verification below. Task 5 distinguishes passing ch
 ## Progress ledger
 
 - Baseline: document commit 2972cbd; no application code or existing tests. Interface contract is docs/spec.md. Shared interfaces: actor context -> all certificate operations; query description -> list/export; certificate response -> UI; persisted operation -> UI retry.
-- Task 1: in progress.
+- Task 1: complete. Two HTTP behavior tests first failed against the empty route scaffold, then passed after database/query implementation.
+- Task 2: complete. Four new behavior tests failed for missing issuance/revocation routes, then passed. Concurrent independent clients and audit-failure rollback included. Backend milestone 6f418c5.
+- Task 3: complete. CSV test failed before route implementation; then nine backend tests passed. Real HTTP A6 passed (100,000 rows, two full downloads under one second), with independent list access. Full suite later added real-socket A2/A7; ten tests pass.
+- Task 4: complete. Production build and full isolated browser smoke passed, including delayed actor response rejection and mobile width. Stable screenshots visually inspected.
+- Task 5: engineering checks complete. Independent standards/spec review completed; material findings fixed in 332982c; full suite/build/UI and new-database startup passed. Four native AI snapshots are exported with explicit cutoffs. Candidate answer declaration and final conversation-tail refresh remain submission responsibilities.
+- Ruling: preserve the existing user-visible project folder and use an implementation branch; no extra worktree needed for this empty dedicated assessment repository.
+- Ruling: accepted Ant Design functional design takes precedence over optional image-led visual concepting. Browser functional verification remains mandatory.
+- Ruling: local pip uses system CA bundle; certificate verification remains enabled. Vite updated to 6.4.6 after npm audit identified an affected earlier patch.
+
+- Follow-up review: 17 backend/performance tests, 13 expanded browser checks, original browser smoke, and production build passed. Three UI regressions and four backend security/validation concerns were fixed and independently re-reviewed. Evidence publication is pending candidate-answer privacy redaction; unfinished answers and raw snapshots remain local.

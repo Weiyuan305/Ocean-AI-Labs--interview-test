@@ -1,6 +1,6 @@
 # Certificate Admin Console: Technical Design
 
-Status: independent builder review completed; material clarifications incorporated. Ready for candidate review. No application code exists yet. See [review record](design-review.md) and [detailed specification](spec.md).
+Status: independent builder review completed; material clarifications incorporated. Approved by the candidate for implementation. See verification.md for actual implementation checks. See [review record](design-review.md) and [detailed specification](spec.md).
 
 ## 1. Authority, scope, and time box
 

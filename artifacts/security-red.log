@@ -1,0 +1,154 @@
+FFFFFFF                                                                  [100%]
+=================================== FAILURES ===================================
+_________ test_demo_discovery_does_not_publish_additional_credentials __________
+
+env = (<starlette.testclient.TestClient object at 0x104df7770>, PosixPath('/private/var/folders/nq/qf3cvyr90p901qtmlt_ktt440...jingwen/pytest-34/test_demo_discovery_does_not_p0/test.sqlite3'), <fastapi.applications.FastAPI object at 0x104df6660>)
+
+    def test_demo_discovery_does_not_publish_additional_credentials(env):
+        client, path, _ = env
+        with sqlite3.connect(path) as db:
+            db.execute('INSERT INTO actors VALUES(3,1,?,?)', ('private@east.test', 'private-test-token'))
+        response = client.get('/api/demo-actors')
+        assert response.status_code == 200
+>       assert {item['id'] for item in response.json()['items']} == {1, 2}
+E       assert {1, 2, 3} == {1, 2}
+E         
+E         Extra items in the left set:
+E         3
+E         Use -v to get more diff
+
+backend/tests/test_acceptance.py:29: AssertionError
+_______________ test_oversized_integer_is_validation_error[page] _______________
+
+env = (<starlette.testclient.TestClient object at 0x104ef4190>, PosixPath('/private/var/folders/nq/qf3cvyr90p901qtmlt_ktt440...jingwen/pytest-34/test_oversized_integer_is_vali0/test.sqlite3'), <fastapi.applications.FastAPI object at 0x103c59090>)
+target = 'page'
+
+    @pytest.mark.parametrize('target', ['page', 'detail', 'revoke', 'course'])
+    def test_oversized_integer_is_validation_error(env, target):
+        client, _, _ = env
+        large = 2**63
+        if target == 'page':
+            response = client.get(f'/api/certificates?page={large}&page_size=100', headers=ALICE)
+        elif target == 'detail':
+            response = client.get(f'/api/certificates/{large}', headers=ALICE)
+        elif target == 'revoke':
+            response = client.post(f'/api/certificates/{large}/revoke', headers=ALICE)
+        else:
+            response = issue(client, course=large)
+>       assert response.status_code == 422
+E       assert 500 == 422
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+backend/tests/test_acceptance.py:45: AssertionError
+______________ test_oversized_integer_is_validation_error[detail] ______________
+
+env = (<starlette.testclient.TestClient object at 0x104e18b90>, PosixPath('/private/var/folders/nq/qf3cvyr90p901qtmlt_ktt440...jingwen/pytest-34/test_oversized_integer_is_vali1/test.sqlite3'), <fastapi.applications.FastAPI object at 0x104e1afd0>)
+target = 'detail'
+
+    @pytest.mark.parametrize('target', ['page', 'detail', 'revoke', 'course'])
+    def test_oversized_integer_is_validation_error(env, target):
+        client, _, _ = env
+        large = 2**63
+        if target == 'page':
+            response = client.get(f'/api/certificates?page={large}&page_size=100', headers=ALICE)
+        elif target == 'detail':
+            response = client.get(f'/api/certificates/{large}', headers=ALICE)
+        elif target == 'revoke':
+            response = client.post(f'/api/certificates/{large}/revoke', headers=ALICE)
+        else:
+            response = issue(client, course=large)
+>       assert response.status_code == 422
+E       assert 500 == 422
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+backend/tests/test_acceptance.py:45: AssertionError
+______________ test_oversized_integer_is_validation_error[revoke] ______________
+
+env = (<starlette.testclient.TestClient object at 0x104ebeea0>, PosixPath('/private/var/folders/nq/qf3cvyr90p901qtmlt_ktt440...jingwen/pytest-34/test_oversized_integer_is_vali2/test.sqlite3'), <fastapi.applications.FastAPI object at 0x104e19450>)
+target = 'revoke'
+
+    @pytest.mark.parametrize('target', ['page', 'detail', 'revoke', 'course'])
+    def test_oversized_integer_is_validation_error(env, target):
+        client, _, _ = env
+        large = 2**63
+        if target == 'page':
+            response = client.get(f'/api/certificates?page={large}&page_size=100', headers=ALICE)
+        elif target == 'detail':
+            response = client.get(f'/api/certificates/{large}', headers=ALICE)
+        elif target == 'revoke':
+            response = client.post(f'/api/certificates/{large}/revoke', headers=ALICE)
+        else:
+            response = issue(client, course=large)
+>       assert response.status_code == 422
+E       assert 500 == 422
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+backend/tests/test_acceptance.py:45: AssertionError
+______________ test_oversized_integer_is_validation_error[course] ______________
+
+env = (<starlette.testclient.TestClient object at 0x104ebc9d0>, PosixPath('/private/var/folders/nq/qf3cvyr90p901qtmlt_ktt440...jingwen/pytest-34/test_oversized_integer_is_vali3/test.sqlite3'), <fastapi.applications.FastAPI object at 0x104ef4f50>)
+target = 'course'
+
+    @pytest.mark.parametrize('target', ['page', 'detail', 'revoke', 'course'])
+    def test_oversized_integer_is_validation_error(env, target):
+        client, _, _ = env
+        large = 2**63
+        if target == 'page':
+            response = client.get(f'/api/certificates?page={large}&page_size=100', headers=ALICE)
+        elif target == 'detail':
+            response = client.get(f'/api/certificates/{large}', headers=ALICE)
+        elif target == 'revoke':
+            response = client.post(f'/api/certificates/{large}/revoke', headers=ALICE)
+        else:
+            response = issue(client, course=large)
+>       assert response.status_code == 422
+E       assert 500 == 422
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+backend/tests/test_acceptance.py:45: AssertionError
+____________________ test_unknown_route_uses_error_envelope ____________________
+
+env = (<starlette.testclient.TestClient object at 0x104f65910>, PosixPath('/private/var/folders/nq/qf3cvyr90p901qtmlt_ktt440...jingwen/pytest-34/test_unknown_route_uses_error_0/test.sqlite3'), <fastapi.applications.FastAPI object at 0x104ef7b10>)
+
+    def test_unknown_route_uses_error_envelope(env):
+        client, _, _ = env
+        response = client.get('/api/unknown', headers=ALICE)
+        assert response.status_code == 404
+>       assert response.json()['error']['code'] == 'NOT_FOUND'
+E       KeyError: 'error'
+
+backend/tests/test_acceptance.py:53: KeyError
+__________________ test_csv_neutralizes_spreadsheet_formulas ___________________
+
+env = (<starlette.testclient.TestClient object at 0x104f6c7c0>, PosixPath('/private/var/folders/nq/qf3cvyr90p901qtmlt_ktt440...jingwen/pytest-34/test_csv_neutralizes_spreadshe0/test.sqlite3'), <fastapi.applications.FastAPI object at 0x104f887d0>)
+
+    def test_csv_neutralizes_spreadsheet_formulas(env):
+        client, path, _ = env
+        for name in ['=1+1', '+SUM(1,2)', '-1+2', '@SUM(1)', '  =1+1', '\tformula', '\rformula', '\n=1+1']:
+            with sqlite3.connect(path) as db:
+                db.execute('UPDATE learners SET name=?,search_name=? WHERE id=3', (name,name.casefold()))
+            response = client.get('/api/certificates/export.csv', headers=ALICE)
+            rows = list(csv.DictReader(io.StringIO(response.text)))
+>           assert next(row for row in rows if row['serial_number']=='DEMO-0001')['learner_name'] == "'" + name
+E           assert '=1+1' == "'=1+1"
+E             
+E             - '=1+1
+E             ? -
+E             + =1+1
+
+backend/tests/test_acceptance.py:64: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/starlette/testclient.py:37
+  /Users/zhaojingwen/Desktop/AI/mianshi-Ocean/.venv/lib/python3.13/site-packages/starlette/testclient.py:37: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED backend/tests/test_acceptance.py::test_demo_discovery_does_not_publish_additional_credentials
+FAILED backend/tests/test_acceptance.py::test_oversized_integer_is_validation_error[page]
+FAILED backend/tests/test_acceptance.py::test_oversized_integer_is_validation_error[detail]
+FAILED backend/tests/test_acceptance.py::test_oversized_integer_is_validation_error[revoke]
+FAILED backend/tests/test_acceptance.py::test_oversized_integer_is_validation_error[course]
+FAILED backend/tests/test_acceptance.py::test_unknown_route_uses_error_envelope
+FAILED backend/tests/test_acceptance.py::test_csv_neutralizes_spreadsheet_formulas
+7 failed, 9 deselected, 1 warning in 0.22s

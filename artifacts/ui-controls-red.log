@@ -1,0 +1,41 @@
+FAIL Issue date toggles ascending Expected values to be strictly equal:
+
+'desc' !== 'asc'
+
+PASS All five sort columns send ascending and descending
+PASS Search button and clear control
+PASS Cancel revocation preserves ACTIVE
+PASS List error Retry
+PASS Detail error Retry detail
+PASS Course error Retry courses
+FAIL Export error retries actual download page.waitForEvent: Timeout 4000ms exceeded while waiting for event "download"
+=========================== logs ===========================
+waiting for event "download"
+============================================================
+PASS Uncertain issuance retry keeps the key and avoids duplicates
+PASS Record pagination next, previous, and page size
+PASS Outcome pagination next and previous
+PASS Initial actor loading error Retry
+FAIL Late revoke failure cannot overwrite another detail Expected values to be strictly equal:
+
+1 !== 0
+
+{
+  "passed": [
+    "All five sort columns send ascending and descending",
+    "Search button and clear control",
+    "Cancel revocation preserves ACTIVE",
+    "List error Retry",
+    "Detail error Retry detail",
+    "Course error Retry courses",
+    "Uncertain issuance retry keeps the key and avoids duplicates",
+    "Record pagination next, previous, and page size",
+    "Outcome pagination next and previous",
+    "Initial actor loading error Retry"
+  ],
+  "failed": [
+    "Issue date toggles ascending",
+    "Export error retries actual download",
+    "Late revoke failure cannot overwrite another detail"
+  ]
+}

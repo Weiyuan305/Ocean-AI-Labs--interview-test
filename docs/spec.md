@@ -1,6 +1,6 @@
 # Certificate Admin Console: Executable Specification
 
-Status: ready for candidate review; implementation and runtime acceptance are pending.
+Status: approved by the candidate for implementation. Runtime evidence is recorded in verification.md; delivery evidence is tracked separately.
 
 ## 1. Authority and SDD workflow
 
@@ -14,7 +14,7 @@ Formal window: 2026-11-10 23:45 to 2026-11-11 00:45 Asia/Shanghai. Target engine
 
 One same-origin local application serves React assets and `/api` routes. Use React, TypeScript, Vite, Ant Design, FastAPI, SQLite, zoneinfo/tzdata, and Python csv. Lock tested dependency versions. No external database service or cloud dependency is required.
 
-Planned files below do not yet exist:
+Implemented file responsibilities:
 
 | File | Responsibility |
 | --- | --- |
@@ -62,7 +62,7 @@ For an authenticated request: malformed data is 422; unknown/foreign resource is
 - `sort`: `learner_name`, `course_title`, `serial_number`, `issue_date`, or `status`; default `issue_date`.
 - `order`: `asc` or `desc`; default `desc`.
 - Always append certificate ID ascending, independent of primary sort direction. Text sorting uses SQLite BINARY collation; search normalization does not change displayed text.
-- List only: `page` positive integer, default 1; `page_size` 1-100, default 20. Export does not accept pagination parameters.
+- List only: `page` positive integer up to floor((2^63-1)/100), default 1; `page_size` 1-100, default 20. Export does not accept pagination parameters.
 
 ### Endpoints
 
@@ -84,7 +84,7 @@ An audit event response contains `id`, `event_type`, `actor_email`, and `created
 
 ## 5. Issuance and revocation behavior
 
-`Idempotency-Key` is required, nonempty, at most 128 ASCII characters from letters, digits, dash, underscore, and dot. The UI generates a UUID. `course_id` is a strict positive integer; reject additional JSON properties. Fingerprint the normalized validated payload plus a fixed issuance version. The key is unique within tenant and actor and has no expiry in this assessment.
+`Idempotency-Key` is required, nonempty, at most 128 ASCII characters from letters, digits, dash, underscore, and dot. The UI generates a UUID. `course_id` is a strict positive integer no greater than 2^63-1; path record IDs use the same positive signed-64 range; reject additional JSON properties. Fingerprint the normalized validated payload plus a fixed issuance version. The key is unique within tenant and actor and has no expiry in this assessment.
 
 For valid input, check course ownership before key lookup. In a short `BEGIN IMMEDIATE` transaction, check the key again. Matching fingerprint returns the original committed result unchanged; differing fingerprint returns 409 without writes. Evaluate enrollments by learner ID. Incomplete -> skipped/INCOMPLETE; otherwise existing certificate of either status -> skipped/ALREADY_CERTIFIED; otherwise insert certificate and one audit event -> issued. Evaluate all enrollments, not just currently eligible ones, so skip reasons are visible.
 
@@ -98,7 +98,7 @@ Revocation runs in a write transaction. Unknown/foreign ID -> 404. ACTIVE -> REV
 
 ## 6. Export and dates
 
-CSV header order: `learner_name,course_title,serial_number,issue_date_local`. Date values are YYYY-MM-DD. Include all matching ACTIVE and REVOKED certificates. Quote commas, quotes, and embedded newlines using the CSV library; preserve Unicode values. No frontend CSV construction or default admin-framework export is used.
+CSV header order: `learner_name,course_title,serial_number,issue_date_local`. Date values are YYYY-MM-DD. Include all matching ACTIVE and REVOKED certificates. Quote commas, quotes, and embedded newlines using the CSV library; preserve Unicode values. Security amendment from review: prefix an apostrophe to any cell beginning with tab, carriage return, or newline, or whose first non-whitespace character is =, +, -, or @. This deliberately changes formula-like exported cell text to discourage spreadsheet evaluation while retaining the original value after the safety prefix; source records remain unchanged. Ordinary CSV text retains exact values. No frontend CSV construction or default admin-framework export is used.
 
 List and export use one shared validated filter/order implementation. Date sort uses the local calendar date; certificate ID ascending breaks date ties, not the time within that date. For `2026-01-10T13:30:00Z`, East displays `2026-01-11 00:30` and exports `2026-01-11`; West displays `2026-01-10 21:30` and exports `2026-01-10`. Derive local fields using Australia/Sydney and Australia/Perth, not constant offsets.
 
@@ -111,7 +111,8 @@ Export opens a dedicated request-owned SQLite connection with foreign keys enabl
 - Course selection shows course completion counts. Bulk submission disables duplicate clicks and displays pending/completed/error state and every learner outcome/reason.
 - Hold key and payload for an uncertain retry, including 503/network errors. An explicit new operation gets a new key. Replayed results may be historical after later revocation; refresh the certificate list independently.
 - Detail shows required fields and audit events. Confirm before revocation; update status only after server success.
-- Export passes the currently applied search and sort, omits pagination, sends actor credentials, and displays errors.
+- Export passes the currently applied search and sort, omits pagination, sends actor credentials, and displays errors with an export-specific retry that starts another download.
+- Ignore delayed revocation errors after the selected detail changes.
 - Actor switching immediately clears records, course selection, detail, results, and request context. Abort obsolete reads or discard responses by request generation. Late results from a previous actor cannot update the screen. A write already received by the server may still commit for its original actor; switching UI identity does not retarget it.
 
 ## 8. Reproducible fixtures and verification

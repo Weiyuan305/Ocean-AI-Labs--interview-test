@@ -2,13 +2,17 @@ import os
 import sqlite3
 from pathlib import Path
 from typing import Annotated, Literal
-from fastapi import FastAPI, Request, Depends, Query, Header
+from fastapi import FastAPI, Request, Depends, Query, Header, Path as PathParam
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, StreamingResponse
 from starlette.background import BackgroundTask
+from starlette.exceptions import HTTPException
 from pydantic import BaseModel, ConfigDict, Field
 from .database import connect, initialize
 from . import certificates as service
+
+MAX_RECORD_ID = 2**63 - 1
+RecordId = Annotated[int, PathParam(gt=0, le=MAX_RECORD_ID)]
 
 
 class ExportQuery(BaseModel):
@@ -19,13 +23,13 @@ class ExportQuery(BaseModel):
 
 
 class ListQuery(ExportQuery):
-    page: int = Field(default=1, ge=1)
+    page: int = Field(default=1, ge=1, le=MAX_RECORD_ID // 100)
     page_size: int = Field(default=20, ge=1, le=100)
 
 
 class IssueRequest(BaseModel):
     model_config = ConfigDict(extra='forbid')
-    course_id: int = Field(strict=True, gt=0)
+    course_id: int = Field(strict=True, gt=0, le=MAX_RECORD_ID)
 
 
 def create_app(db_path=None):
@@ -48,6 +52,11 @@ def create_app(db_path=None):
     async def validation_error(request, exc):
         return JSONResponse({'error':{'code':'INVALID_REQUEST','message':'Invalid request parameters or body.'}},status_code=422)
 
+    @app.exception_handler(HTTPException)
+    async def http_error(request, exc):
+        code = {404:'NOT_FOUND',405:'METHOD_NOT_ALLOWED'}.get(exc.status_code,'HTTP_ERROR')
+        return JSONResponse({'error':{'code':code,'message':str(exc.detail)}},status_code=exc.status_code,headers=exc.headers)
+
     @app.exception_handler(sqlite3.OperationalError)
     async def database_error(request, exc):
         locked = 'locked' in str(exc).lower() or 'busy' in str(exc).lower()
@@ -68,7 +77,7 @@ def create_app(db_path=None):
     def demo_actors():
         db = connect(path)
         try:
-            return {'items':[dict(r) for r in db.execute('SELECT a.id,a.email,a.token AS demo_token,t.name AS tenant_name,t.timezone FROM actors a JOIN tenants t ON t.id=a.tenant_id ORDER BY a.id')]}
+            return {'items':[dict(r) for r in db.execute('SELECT a.id,a.email,a.token AS demo_token,t.name AS tenant_name,t.timezone FROM actors a JOIN tenants t ON t.id=a.tenant_id WHERE (a.id=1 AND a.tenant_id=1 AND a.email=? AND a.token=?) OR (a.id=2 AND a.tenant_id=2 AND a.email=? AND a.token=?) ORDER BY a.id',('alice@east.test','east-demo-token','bob@west.test','west-demo-token'))]}
         finally:
             db.close()
 
@@ -90,7 +99,7 @@ def create_app(db_path=None):
         return StreamingResponse(stream.chunks(),media_type='text/csv; charset=utf-8',headers={'Content-Disposition':'attachment; filename="certificates.csv"'},background=BackgroundTask(stream.close))
 
     @app.get('/api/certificates/{certificate_id}',  dependencies=[Depends(no_query)])
-    def certificate_detail(certificate_id: int, current=Depends(actor)):
+    def certificate_detail(certificate_id: RecordId, current=Depends(actor)):
         return service.detail(path,current,certificate_id)
 
     @app.post('/api/certificate-issuances', dependencies=[Depends(no_query)])
@@ -98,7 +107,7 @@ def create_app(db_path=None):
         return service.issue_course(path,current,body.course_id,idempotency_key)
 
     @app.post('/api/certificates/{certificate_id}/revoke', dependencies=[Depends(no_query)])
-    async def revoke(certificate_id: int, request: Request, current=Depends(actor)):
+    async def revoke(certificate_id: RecordId, request: Request, current=Depends(actor)):
         if await request.body():
             raise service.DomainError(422,'INVALID_REQUEST','Revocation does not accept a body.')
         from starlette.concurrency import run_in_threadpool

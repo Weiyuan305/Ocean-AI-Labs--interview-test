@@ -160,6 +160,13 @@ def revoke(path, actor, certificate_id, clock=None):
     return detail(path,actor,certificate_id)
 
 
+def spreadsheet_cell(value):
+    """Keep untrusted text from being interpreted as a spreadsheet formula."""
+    if isinstance(value, str) and (value.startswith(('\t','\r','\n')) or value.lstrip().startswith(('=','+','-','@'))):
+        return "'" + value
+    return value
+
+
 class CsvExport:
     """Owns one sequentially consumed snapshot across handler and stream threads."""
     def __init__(self,path,actor,query):
@@ -192,7 +199,7 @@ class CsvExport:
             while batch:
                 output.seek(0)
                 output.truncate(0)
-                writer.writerows([[row[field] for field in fields] for row in batch])
+                writer.writerows([[spreadsheet_cell(row[field]) for field in fields] for row in batch])
                 yield output.getvalue().encode('utf-8')
                 batch=self.cursor.fetchmany(1000)
         finally:

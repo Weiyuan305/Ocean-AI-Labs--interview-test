@@ -1,0 +1,31 @@
+PASS Issue date toggles ascending
+PASS All five sort columns send ascending and descending
+PASS Search button and clear control
+PASS Cancel revocation preserves ACTIVE
+PASS List error Retry
+PASS Detail error Retry detail
+PASS Course error Retry courses
+PASS Export error retries actual download
+PASS Uncertain issuance retry keeps the key and avoids duplicates
+PASS Record pagination next, previous, and page size
+PASS Outcome pagination next and previous
+PASS Initial actor loading error Retry
+PASS Late revoke failure cannot overwrite another detail
+{
+  "passed": [
+    "Issue date toggles ascending",
+    "All five sort columns send ascending and descending",
+    "Search button and clear control",
+    "Cancel revocation preserves ACTIVE",
+    "List error Retry",
+    "Detail error Retry detail",
+    "Course error Retry courses",
+    "Export error retries actual download",
+    "Uncertain issuance retry keeps the key and avoids duplicates",
+    "Record pagination next, previous, and page size",
+    "Outcome pagination next and previous",
+    "Initial actor loading error Retry",
+    "Late revoke failure cannot overwrite another detail"
+  ],
+  "failed": []
+}
